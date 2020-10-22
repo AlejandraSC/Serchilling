@@ -1,0 +1,1 @@
+{"version":3,"sources":["core/_reset.scss"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,SAAS;EACT,UAAU,EAAA","file":"main.css","sourcesContent":["* {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n"]}
