@@ -1,3 +1,7 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 .eachSerie__container {
   display: flex;
   flex-direction: column;
@@ -8,3 +12,48 @@
 .resultImg {
   width: 180px;
 }
+
+.fav__container {
+  background-color: hotpink;
+}
+/*
+
+
+*/
+
+/*
+function getData() {
+  const userValue = request.value;
+  fetch('//api.tvmaze.com/search/shows?q=' + userValue)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      series = data.series;
+      paintSeries();
+      listenImages();
+    });
+}
+
+function paintSeries() {
+  console.log('holiii');
+  for (let serie of series) {
+    //Titulo serie
+    const resultTitle__paragr = document.createElement('p');
+    const resultTitle__content = document.createTextNode(serie.show.name);
+    resultTitle__paragr.appendChild(resultTitle__content);
+    //foto serie
+    const resultImg__container = document.createElement('img');
+    resultImg__container.classList.add('resultImg');
+    resultImg__container.classList.add('js-resultImg');
+    //seleccionamos la imagen, si no existe creamos una con el nombre
+    if (serie.show.image) {
+      resultImg__container.src = serie.show.image.original;
+    } else {
+      resultImg__container.src = '//via.placeholder.com/210x295/ffffff/666666/?text=' + serie.show.name;
+    }
+    // Incluir en div
+    includeInMyDiv(resultTitle__paragr, resultImg__container);
+  }
+}
+
+*/
