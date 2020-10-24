@@ -1,1 +1,1 @@
-"use strict";
+"use strict";const searchButton=document.querySelector(".js-search__btn"),request=document.querySelector(".js-searcher__input");function search(){fetch("http://api.tvmaze.com/search/shows?q=tronos").then(e=>e.json()).then(e=>{console.log(e)})}function userRequest(){request.value;console.log("Hola2")}searchButton.addEventListener("click",search);
