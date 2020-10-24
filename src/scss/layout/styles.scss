@@ -1,59 +1,73 @@
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: '', sans-serif;
+  background-color: rosybrown;
+}
+
+.search__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+
+.mainTitle {
+  display: flex;
+  text-transform: uppercase;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 50px;
+  color: #644143;
+  margin: 80px 0 20px 0;
+}
+
+.inputText {
+  border-radius: 20px;
+  border: none;
+  margin: 10px 15px 10px 0px;
+  padding: 2px 5px 2px 14px;
+  background-color: beige;
+  width: 220px;
+  height: 30px;
+  color: #644143;
+}
+
+.search__btn {
+  border-radius: 14px;
+  border: none;
+  margin: 10px 0 10px 0;
+  padding: 2px 7px 2px 7px;
+  background-color: beige;
+  color: #644143;
+  &:hover {
+    background-color: #644143;
+    color: beige;
+  }
+}
+
+.fav__container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #644143;
+  color: beige;
+  padding: 15px 15px 15px 15px;
+  margin-bottom: 40px;
+}
+
+.favParagr {
+  padding: 0 0 0 850px;
 }
 
 .eachSerie__container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 20px 800px 0 800px;
 }
 
 .resultImg {
-  width: 180px;
+  display: flex;
+  justify-content: space-between;
+  width: 150px;
 }
-
-.fav__container {
-  background-color: hotpink;
-}
-/*
-
-
-*/
-
-/*
-function getData() {
-  const userValue = request.value;
-  fetch('//api.tvmaze.com/search/shows?q=' + userValue)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      series = data.series;
-      paintSeries();
-      listenImages();
-    });
-}
-
-function paintSeries() {
-  console.log('holiii');
-  for (let serie of series) {
-    //Titulo serie
-    const resultTitle__paragr = document.createElement('p');
-    const resultTitle__content = document.createTextNode(serie.show.name);
-    resultTitle__paragr.appendChild(resultTitle__content);
-    //foto serie
-    const resultImg__container = document.createElement('img');
-    resultImg__container.classList.add('resultImg');
-    resultImg__container.classList.add('js-resultImg');
-    //seleccionamos la imagen, si no existe creamos una con el nombre
-    if (serie.show.image) {
-      resultImg__container.src = serie.show.image.original;
-    } else {
-      resultImg__container.src = '//via.placeholder.com/210x295/ffffff/666666/?text=' + serie.show.name;
-    }
-    // Incluir en div
-    includeInMyDiv(resultTitle__paragr, resultImg__container);
-  }
-}
-
-*/

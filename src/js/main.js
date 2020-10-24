@@ -4,29 +4,30 @@ const searchButton = document.querySelector('.js-search__btn');
 const request = document.querySelector('.js-inputText');
 const results = document.querySelector('.results__container');
 let series = [];
-let favoritLis = [];
+let seriesFav = [];
 let indexFavContainers = 0;
 
 function getData() {
   const userValue = request.value;
+  console.log(userValue);
   fetch('//api.tvmaze.com/search/shows?q=' + userValue)
     .then((response) => response.json())
     .then((data) => {
+      cleanDiv();
       series = data;
-
       for (let i = 0; i < series.length; i++) {
-        paintSerie(series[i], i, results);
+        paintSerie(series[i], i, results, 'eachSerie__container');
       }
       listenImages();
     });
 }
 
-function paintSerie(serie, index, container) {
+function paintSerie(serie, index, container, containerName) {
   const tittle = createTitle(serie.show.name);
   const img = createImg(serie);
-  const divContainer = createDiv(tittle, img, index);
-
+  const divContainer = createDiv(tittle, img, index, containerName);
   container.appendChild(divContainer);
+  return divContainer;
 }
 
 function listenImages() {
@@ -37,13 +38,39 @@ function listenImages() {
 }
 
 function favSeries(ev) {
-  const fav = document.querySelector('.fav__container');
-  const serieToInclude = series[ev.currentTarget.id];
-  favoritLis.push(serieToInclude);
-  paintSerie(serieToInclude, indexFavContainers, fav);
-  indexFavContainers++;
+  if (!seriesFav.includes(series[ev.currentTarget.id])) {
+    seriesFav.push(series[ev.currentTarget.id]);
+    const favContainer = document.querySelector('.fav__container');
+    const serieToInclude = series[ev.currentTarget.id];
+    const containerAddedToFav = paintSerie(serieToInclude, indexFavContainers, favContainer, 'eachSerieFav__container');
+    indexFavContainers++;
+    // console.log(containerAddedToFav);
+
+    containerAddedToFav.addEventListener('click', removeFav);
+  }
+  setLocalStorage();
 }
 
+function removeFav(ev) {
+  ev.currentTarget.remove();
+  seriesFav.splice(series[ev.currentTarget.id], 1);
+}
+
+function setLocalStorage() {
+  localStorage.setItem('favSeries', JSON.stringify(series));
+}
+
+function getLocalStorage() {
+  const localfavSeries = localStorage.getItem('favSeries');
+  const localfavSeriesJson = JSON.parse(localfavSeries);
+  if (localfavSeriesJson === null) {
+    getData();
+  } else {
+    favSeries = localfavSeriesJson;
+    paintSerie();
+    listenImages();
+  }
+}
 /*
 
 
@@ -95,21 +122,32 @@ function createImg(serie) {
 
 function createTitle(name) {
   const resultTitle__paragr = document.createElement('p');
+  resultTitle__paragr.classList.add('resultTitle');
   const resultTitle__content = document.createTextNode(name);
   resultTitle__paragr.appendChild(resultTitle__content);
   return resultTitle__paragr;
 }
 
-function createDiv(title, img, index) {
+function createDiv(title, img, index, containerName) {
   const eachSerie__container = document.createElement('div');
-  eachSerie__container.classList.add('eachSerie__container');
+  eachSerie__container.classList.add(containerName);
   eachSerie__container.id = index;
-  eachSerie__container.appendChild(title);
   eachSerie__container.appendChild(img);
+  eachSerie__container.appendChild(title);
+
   return eachSerie__container;
+}
+
+function cleanDiv() {
+  while (results.firstChild) {
+    results.removeChild(results.firstChild);
+  }
 }
 
 searchButton.addEventListener('click', getData);
 
 //Borrar antes de subir
 searchButton.click();
+
+//getlocal
+//getLocalStorage();
