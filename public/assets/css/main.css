@@ -3,11 +3,13 @@
   margin: 0;
   padding: 0; }
 
-/*
 .eachSerie__container {
-}
-*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: nowrap; }
+
 .resultImg {
-  width: 50px; }
+  width: 180px; }
 
 /*# sourceMappingURL=main.css.map */
