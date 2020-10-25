@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buscador de Series</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/d000050c19.js" crossorigin="anonymous"></script>
+  
     <link rel="stylesheet" href="./assets/css/main.css" />
   </head>
   <body>
@@ -17,14 +17,17 @@
     <main>
       <form method="GET" class="search__container">
         <label for="text"></label>
-        <input type="text" placeholder="¿Qué serie buscas?" class="inputText js-inputText" required value="tronos" />
+        <input type="text" placeholder="What serie are you looking for?" class="inputText js-inputText" required/>
         <!--Borrar antes de subir el value="tronos"-->
         <label for="button"></label>
         <input type="button" class="search__btn js-search__btn" value="Search" />
       </form>
+      <p class="favParagr"> &#9825 <strong>My favourites </strong> &#9825</p>
+      <label for=btn></label>
+      <input type="button" value = "Delete" class="deleteButton">
       <div class="fav__container">
-        <p class="favParagr"> &#9825 Mis favoritos  &#9825</p>
       </div>
+      <p class="resultsParagr"> &#x2b02; <strong>  My results:  </strong> &#x2b03;</p>
       <div class="results__container"></div>
     </main>
     <script src="./assets/js/main.js"></script>

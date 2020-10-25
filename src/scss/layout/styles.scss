@@ -23,7 +23,7 @@ body {
 .inputText {
   border-radius: 20px;
   border: none;
-  margin: 10px 15px 10px 0px;
+  margin: 10px 0 10px 0px;
   padding: 2px 5px 2px 14px;
   background-color: beige;
   width: 220px;
@@ -31,10 +31,11 @@ body {
   color: #644143;
 }
 
-.search__btn {
+.search__btn,
+.deleteButton {
   border-radius: 14px;
   border: none;
-  margin: 10px 0 10px 0;
+  margin: 10px 0 10px 45px;
   padding: 2px 7px 2px 7px;
   background-color: beige;
   color: #644143;
@@ -46,28 +47,37 @@ body {
 
 .fav__container {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
+  flex-direction: row;
   background-color: #644143;
   color: beige;
-  padding: 15px 15px 15px 15px;
-  margin-bottom: 40px;
+  padding: 20px 20px 20px 20px;
+  margin: 0 20px 20px 20px;
 }
 
+.resultsParagr,
 .favParagr {
-  padding: 0 0 0 850px;
+  color: #644143;
+  padding-left: 20px;
+  font-size: 20px;
+}
+
+.resultTitle {
+  width: 200px;
+  color: #644143;
 }
 
 .eachSerie__container {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  padding: 20px 800px 0 800px;
+  flex-wrap: wrap;
+  margin: 10px 20px 20px 20px;
 }
 
 .resultImg {
-  display: flex;
-  justify-content: space-between;
-  width: 150px;
+  width: 120px;
+}
+
+.alreadyFav {
+  background-color: beige;
 }

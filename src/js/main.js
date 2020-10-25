@@ -3,29 +3,35 @@
 const searchButton = document.querySelector('.js-search__btn');
 const request = document.querySelector('.js-inputText');
 const results = document.querySelector('.results__container');
+const deleteButton = document.querySelector('.deleteButton');
+
 let series = [];
 let seriesFav = [];
 
 function getData() {
   const userValue = request.value;
-
   fetch('//api.tvmaze.com/search/shows?q=' + userValue)
     .then((response) => response.json())
     .then((data) => {
-      cleanResultDiv();
+      cleanResultDiv(results);
       series = data;
-      console.log(series);
       for (let i = 0; i < series.length; i++) {
-        paintSerie(series[i], i, results, 'eachSerie__container');
+        const ind = getFavInd();
+        const id = series[i].show.id;
+        if (ind.indexOf(parseInt(series[i].show.id)) != -1) {
+          paintSerie(series[i], id, results, 'eachSerie__container', true);
+        } else {
+          paintSerie(series[i], id, results, 'eachSerie__container', false);
+        }
       }
       listenImages();
     });
 }
 
-function paintSerie(serie, index, container, containerName) {
+function paintSerie(serie, index, container, containerName, isFav) {
   const tittle = createTitle(serie.show.name);
   const img = createImg(serie);
-  const divContainer = createDiv(tittle, img, index, containerName);
+  const divContainer = createDiv(tittle, img, index, containerName, isFav);
   container.appendChild(divContainer);
   return divContainer;
 }
@@ -38,10 +44,14 @@ function listenImages() {
 }
 
 function favSeries(ev) {
-  const serieToInclude = series[ev.currentTarget.id];
+  console.log(ev.currentTarget);
+
+  const serieToInclude = series.find((name) => name.show.id == ev.currentTarget.id);
   const id = serieToInclude.show.id;
 
-  if (!seriesFav.includes(serieToInclude)) {
+  let ind = getFavInd();
+
+  if (ind.indexOf(parseInt(id)) == -1) {
     seriesFav.push(serieToInclude);
     const favContainer = document.querySelector('.fav__container');
     const containerAddedToFav = paintSerie(serieToInclude, id, favContainer, 'eachSerieFav__container');
@@ -50,22 +60,35 @@ function favSeries(ev) {
     if (seriesFav.length > 0) {
       setLocalStorage(seriesFav);
     }
+    ev.currentTarget.classList.add('alreadyFav');
   }
 }
 
-function removeFav(ev) {
-  ev.currentTarget.remove();
-
-  //Creamos un array de indices auxiliar para ver que IDs tenemos y hacer un indexOf
+function getFavInd() {
   let ind = [];
   for (let serieFav of seriesFav) {
     ind.push(parseInt(serieFav.show.id));
   }
+  return ind;
+}
+
+function removeFav(ev) {
+  ev.currentTarget.remove();
+  //Creamos un array de indices auxiliar para ver que IDs tenemos y hacer un indexOf
+  let ind = getFavInd();
+
   const serieToRemove = ind.indexOf(parseInt(ev.currentTarget.id));
   seriesFav.splice(serieToRemove, 1);
   localStorage.removeItem('favSeries');
   if (seriesFav.length > 0) {
     setLocalStorage(seriesFav);
+  }
+
+  const eachSerie__containers = document.querySelectorAll('.eachSerie__container');
+  for (const container of eachSerie__containers) {
+    if (container.id == parseInt(ev.currentTarget.id)) {
+      container.classList.remove('alreadyFav');
+    }
   }
 }
 
@@ -87,7 +110,7 @@ function getLocalStorage() {
 function paintLocalstoreSeries() {
   for (let serie of seriesFav) {
     const favContainer = document.querySelector('.fav__container');
-    const containerAddedToFav = paintSerie(serie, serie.show.id, favContainer, 'eachSerieFav__container');
+    const containerAddedToFav = paintSerie(serie, serie.show.id, favContainer, 'eachSerieFav__container', false);
     containerAddedToFav.addEventListener('click', removeFav);
   }
 }
@@ -113,9 +136,12 @@ function createTitle(name) {
   return resultTitle__paragr;
 }
 
-function createDiv(title, img, index, containerName) {
+function createDiv(title, img, index, containerName, isFav) {
   const eachSerie__container = document.createElement('div');
   eachSerie__container.classList.add(containerName);
+  if (isFav) {
+    eachSerie__container.classList.add('alreadyFav');
+  }
   eachSerie__container.id = index;
   eachSerie__container.appendChild(img);
   eachSerie__container.appendChild(title);
@@ -123,16 +149,26 @@ function createDiv(title, img, index, containerName) {
   return eachSerie__container;
 }
 
-function cleanResultDiv() {
-  while (results.firstChild) {
-    results.removeChild(results.firstChild);
+function cleanResultDiv(divToclean) {
+  while (divToclean.firstChild) {
+    divToclean.removeChild(divToclean.firstChild);
+  }
+}
+
+function deleteFav() {
+  console.log('Is working');
+  localStorage.removeItem('favSeries');
+  seriesFav = [];
+  const favContainer = document.querySelector('.fav__container');
+  cleanResultDiv(favContainer);
+
+  const eachSerie__containers = document.querySelectorAll('.eachSerie__container');
+  for (const container of eachSerie__containers) {
+    container.classList.remove('alreadyFav');
   }
 }
 
 searchButton.addEventListener('click', getData);
+deleteButton.addEventListener('click', deleteFav);
 
-//Borrar antes de subir
-searchButton.click();
-
-//getlocal
 getLocalStorage();
