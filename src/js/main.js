@@ -5,16 +5,16 @@ const request = document.querySelector('.js-inputText');
 const results = document.querySelector('.results__container');
 let series = [];
 let seriesFav = [];
-let indexFavContainers = 0;
 
 function getData() {
   const userValue = request.value;
-  console.log(userValue);
+
   fetch('//api.tvmaze.com/search/shows?q=' + userValue)
     .then((response) => response.json())
     .then((data) => {
-      cleanDiv();
+      cleanResultDiv();
       series = data;
+      console.log(series);
       for (let i = 0; i < series.length; i++) {
         paintSerie(series[i], i, results, 'eachSerie__container');
       }
@@ -38,14 +38,12 @@ function listenImages() {
 }
 
 function favSeries(ev) {
-  if (!seriesFav.includes(series[ev.currentTarget.id])) {
-    seriesFav.push(series[ev.currentTarget.id]);
-    const favContainer = document.querySelector('.fav__container');
-    const serieToInclude = series[ev.currentTarget.id];
-    const containerAddedToFav = paintSerie(serieToInclude, indexFavContainers, favContainer, 'eachSerieFav__container');
-    indexFavContainers++;
-    // console.log(containerAddedToFav);
+  const serieToInclude = series[ev.currentTarget.id];
 
+  if (!seriesFav.includes(serieToInclude)) {
+    seriesFav.push(serieToInclude);
+    const favContainer = document.querySelector('.fav__container');
+    const containerAddedToFav = paintSerie(serieToInclude, serieToInclude.show.id, favContainer, 'eachSerieFav__container');
     containerAddedToFav.addEventListener('click', removeFav);
   }
   setLocalStorage();
@@ -53,7 +51,14 @@ function favSeries(ev) {
 
 function removeFav(ev) {
   ev.currentTarget.remove();
-  seriesFav.splice(series[ev.currentTarget.id], 1);
+
+  //Creamos un array de indices auxiliar para ver que IDs tenemos y hacer un indexOf
+  let ind = [];
+  for (let serieFav of seriesFav) {
+    ind.push(parseInt(serieFav.show.id));
+  }
+  const serieToRemove = ind.indexOf(parseInt(ev.currentTarget.id));
+  seriesFav.splice(serieToRemove, 1);
 }
 
 function setLocalStorage() {
@@ -71,41 +76,6 @@ function getLocalStorage() {
     listenImages();
   }
 }
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
 
 function createImg(serie) {
   const resultImg__container = document.createElement('img');
@@ -138,7 +108,7 @@ function createDiv(title, img, index, containerName) {
   return eachSerie__container;
 }
 
-function cleanDiv() {
+function cleanResultDiv() {
   while (results.firstChild) {
     results.removeChild(results.firstChild);
   }
