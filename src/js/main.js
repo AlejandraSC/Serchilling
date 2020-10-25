@@ -39,14 +39,18 @@ function listenImages() {
 
 function favSeries(ev) {
   const serieToInclude = series[ev.currentTarget.id];
+  const id = serieToInclude.show.id;
 
   if (!seriesFav.includes(serieToInclude)) {
     seriesFav.push(serieToInclude);
     const favContainer = document.querySelector('.fav__container');
-    const containerAddedToFav = paintSerie(serieToInclude, serieToInclude.show.id, favContainer, 'eachSerieFav__container');
+    const containerAddedToFav = paintSerie(serieToInclude, id, favContainer, 'eachSerieFav__container');
     containerAddedToFav.addEventListener('click', removeFav);
+    localStorage.removeItem('favSeries');
+    if (seriesFav.length > 0) {
+      setLocalStorage(seriesFav);
+    }
   }
-  setLocalStorage();
 }
 
 function removeFav(ev) {
@@ -59,10 +63,14 @@ function removeFav(ev) {
   }
   const serieToRemove = ind.indexOf(parseInt(ev.currentTarget.id));
   seriesFav.splice(serieToRemove, 1);
+  localStorage.removeItem('favSeries');
+  if (seriesFav.length > 0) {
+    setLocalStorage(seriesFav);
+  }
 }
 
-function setLocalStorage() {
-  localStorage.setItem('favSeries', JSON.stringify(series));
+function setLocalStorage(seriesFav) {
+  localStorage.setItem('favSeries', JSON.stringify(seriesFav));
 }
 
 function getLocalStorage() {
@@ -71,9 +79,16 @@ function getLocalStorage() {
   if (localfavSeriesJson === null) {
     getData();
   } else {
-    favSeries = localfavSeriesJson;
-    paintSerie();
-    listenImages();
+    seriesFav = localfavSeriesJson;
+    paintLocalstoreSeries();
+  }
+}
+
+function paintLocalstoreSeries() {
+  for (let serie of seriesFav) {
+    const favContainer = document.querySelector('.fav__container');
+    const containerAddedToFav = paintSerie(serie, serie.show.id, favContainer, 'eachSerieFav__container');
+    containerAddedToFav.addEventListener('click', removeFav);
   }
 }
 
@@ -120,4 +135,4 @@ searchButton.addEventListener('click', getData);
 searchButton.click();
 
 //getlocal
-//getLocalStorage();
+getLocalStorage();
