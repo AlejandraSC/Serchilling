@@ -4,23 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buscador de Series</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet" />
+  
     <link rel="stylesheet" href="./assets/css/main.css" />
   </head>
   <body>
     <header>
       <div>
-        <h1 class="mainTitle">Buscador de Series</h1>
+        <h1 class="mainTitle"> 🍩 Serchilling 🍩 </h1>
       </div>
     </header>
     <main>
-      <form class="search__container">
-        <label for="ask"></label>
-        <input type="text" placeholder="¿Qué serie buscas?" class="searcher__input js-searcher__input" />
-        <button class="search__btn js-search__btn">Buscar</button>
+      <form method="GET" class="search__container">
+        <label for="text"></label>
+        <input type="text" placeholder="What serie are you looking for?" class="inputText js-inputText" required/>
+        <!--Borrar antes de subir el value="tronos"-->
+        <label for="button"></label>
+        <input type="button" class="search__btn js-search__btn" value="Search" />
       </form>
+      <p class="favParagr"> &#9825 <strong> My favourites </strong> </p>
+      <label for=btn></label>
+      <input type="button" value = "Delete" class="deleteButton">
       <div class="fav__container">
-        <h2 class="fav__title">Mis series favoritas</h2>
       </div>
+      <p class="resultsParagr"> &#x2b02; <strong>  My results  </strong> </p>
       <div class="results__container"></div>
     </main>
     <script src="./assets/js/main.js"></script>
