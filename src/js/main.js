@@ -1,38 +1,66 @@
 'use strict';
 
-const searchButton = document.querySelector('.js-search__btn');
 const request = document.querySelector('.js-inputText');
 const results = document.querySelector('.results__container');
+const searchButton = document.querySelector('.js-search__btn');
+searchButton.addEventListener('click', getData);
 const deleteButton = document.querySelector('.deleteButton');
+deleteButton.addEventListener('click', deleteAllFav);
 
 let series = [];
 let seriesFav = [];
 
+//LOCAL STORAGE
+getLocalStorage();
+
+function getLocalStorage() {
+  const localfavSeries = localStorage.getItem('favSeries');
+  const localfavSeriesJson = JSON.parse(localfavSeries);
+  if (localfavSeriesJson !== null) {
+    seriesFav = localfavSeriesJson;
+    paintLocalstoreSeries();
+  }
+}
+
+function paintLocalstoreSeries() {
+  for (let serie of seriesFav) {
+    const favContainer = document.querySelector('.fav__container');
+    const containerAddedToFav = paintSerie(serie, serie.show.id, favContainer, 'eachSerieFav__container', false, 'resultFavTitle');
+    containerAddedToFav.addEventListener('click', removeFav);
+  }
+}
+
+function setLocalStorage(seriesFav) {
+  localStorage.setItem('favSeries', JSON.stringify(seriesFav));
+}
+
+//PAINT RESULT
 function getData() {
   const userValue = request.value;
   fetch('//api.tvmaze.com/search/shows?q=' + userValue)
     .then((response) => response.json())
     .then((data) => {
-      cleanResultDiv(results);
+      cleanDiv(results);
       series = data;
+      const favArray = getFavInd();
       for (let i = 0; i < series.length; i++) {
-        const ind = getFavInd();
-        const id = series[i].show.id;
-        if (ind.indexOf(parseInt(series[i].show.id)) != -1) {
-          paintSerie(series[i], id, results, 'eachSerie__container', true);
+        const idSerie = parseInt(series[i].show.id);
+
+        if (favArray.indexOf(idSerie) != -1) {
+          paintSerie(series[i], idSerie, results, 'eachSerie__container', true, 'resultTitle');
         } else {
-          paintSerie(series[i], id, results, 'eachSerie__container', false);
+          paintSerie(series[i], idSerie, results, 'eachSerie__container', false, 'resultTitle');
         }
       }
       listenImages();
     });
 }
 
-function paintSerie(serie, index, container, containerName, isFav) {
-  const tittle = createTitle(serie.show.name);
+function paintSerie(serie, index, mainContainer, containerName, isFav, containerTitle) {
+  const tittle = createTitle(serie.show.name, containerTitle);
   const img = createImg(serie);
   const divContainer = createDiv(tittle, img, index, containerName, isFav);
-  container.appendChild(divContainer);
+  mainContainer.appendChild(divContainer);
   return divContainer;
 }
 
@@ -43,41 +71,59 @@ function listenImages() {
   }
 }
 
+//INCLUDE OR REMOVE FAV FROM RESULTS
 function favSeries(ev) {
-  console.log(ev.currentTarget);
-
   const serieToInclude = series.find((name) => name.show.id == ev.currentTarget.id);
   const id = serieToInclude.show.id;
 
-  let ind = getFavInd();
+  let favArray = getFavInd();
 
-  if (ind.indexOf(parseInt(id)) == -1) {
+  if (favArray.indexOf(parseInt(id)) == -1) {
     seriesFav.push(serieToInclude);
+    ev.currentTarget.classList.add('alreadyFav');
+
     const favContainer = document.querySelector('.fav__container');
-    const containerAddedToFav = paintSerie(serieToInclude, id, favContainer, 'eachSerieFav__container');
+    const containerAddedToFav = paintSerie(serieToInclude, id, favContainer, 'eachSerieFav__container', false, 'resultFavTitle');
     containerAddedToFav.addEventListener('click', removeFav);
     localStorage.removeItem('favSeries');
     if (seriesFav.length > 0) {
       setLocalStorage(seriesFav);
     }
-    ev.currentTarget.classList.add('alreadyFav');
+  } else {
+    removeFavFromResult(ev.currentTarget.id);
   }
 }
 
-function getFavInd() {
-  let ind = [];
-  for (let serieFav of seriesFav) {
-    ind.push(parseInt(serieFav.show.id));
+function removeFavFromResult(id) {
+  const eachSerieFav__containers = document.querySelectorAll('.eachSerieFav__container');
+  for (const container of eachSerieFav__containers) {
+    if (container.id == id) {
+      container.remove();
+    }
   }
-  return ind;
+
+  let favArray = getFavInd();
+  const serieToRemove = favArray.indexOf(id);
+  seriesFav.splice(serieToRemove, 1);
+  localStorage.removeItem('favSeries');
+  if (seriesFav.length > 0) {
+    setLocalStorage(seriesFav);
+  }
+
+  const eachSerie__containers = document.querySelectorAll('.eachSerie__container');
+  for (const container of eachSerie__containers) {
+    if (container.id == id) {
+      container.classList.remove('alreadyFav');
+    }
+  }
 }
 
+//REMOVE FAV FROM FAV
 function removeFav(ev) {
   ev.currentTarget.remove();
-  //Creamos un array de indices auxiliar para ver que IDs tenemos y hacer un indexOf
-  let ind = getFavInd();
+  let favArray = getFavInd();
 
-  const serieToRemove = ind.indexOf(parseInt(ev.currentTarget.id));
+  const serieToRemove = favArray.indexOf(parseInt(ev.currentTarget.id));
   seriesFav.splice(serieToRemove, 1);
   localStorage.removeItem('favSeries');
   if (seriesFav.length > 0) {
@@ -92,34 +138,34 @@ function removeFav(ev) {
   }
 }
 
-function setLocalStorage(seriesFav) {
-  localStorage.setItem('favSeries', JSON.stringify(seriesFav));
-}
+//DELETE ALL FAVS
+function deleteAllFav() {
+  localStorage.removeItem('favSeries');
+  seriesFav = [];
 
-function getLocalStorage() {
-  const localfavSeries = localStorage.getItem('favSeries');
-  const localfavSeriesJson = JSON.parse(localfavSeries);
-  if (localfavSeriesJson === null) {
-    getData();
-  } else {
-    seriesFav = localfavSeriesJson;
-    paintLocalstoreSeries();
+  const favContainer = document.querySelector('.fav__container');
+  cleanDiv(favContainer);
+
+  const eachSerie__containers = document.querySelectorAll('.eachSerie__container');
+  for (const container of eachSerie__containers) {
+    container.classList.remove('alreadyFav');
   }
 }
 
-function paintLocalstoreSeries() {
-  for (let serie of seriesFav) {
-    const favContainer = document.querySelector('.fav__container');
-    const containerAddedToFav = paintSerie(serie, serie.show.id, favContainer, 'eachSerieFav__container', false);
-    containerAddedToFav.addEventListener('click', removeFav);
+//AUX FUNCTION
+function getFavInd() {
+  let ind = [];
+  for (let serieFav of seriesFav) {
+    ind.push(parseInt(serieFav.show.id));
   }
+  return ind;
 }
 
+//MODIFY THE HTML DOM
 function createImg(serie) {
   const resultImg__container = document.createElement('img');
   resultImg__container.classList.add('resultImg');
   resultImg__container.classList.add('js-resultImg');
-  //seleccionamos la imagen, si no existe creamos una con el nombre
   if (serie.show.image) {
     resultImg__container.src = serie.show.image.original;
   } else {
@@ -128,10 +174,10 @@ function createImg(serie) {
   return resultImg__container;
 }
 
-function createTitle(name) {
+function createTitle(title, containerTextTittle) {
   const resultTitle__paragr = document.createElement('p');
-  resultTitle__paragr.classList.add('resultTitle');
-  const resultTitle__content = document.createTextNode(name);
+  resultTitle__paragr.classList.add(containerTextTittle);
+  const resultTitle__content = document.createTextNode(title);
   resultTitle__paragr.appendChild(resultTitle__content);
   return resultTitle__paragr;
 }
@@ -145,30 +191,11 @@ function createDiv(title, img, index, containerName, isFav) {
   eachSerie__container.id = index;
   eachSerie__container.appendChild(img);
   eachSerie__container.appendChild(title);
-
   return eachSerie__container;
 }
 
-function cleanResultDiv(divToclean) {
+function cleanDiv(divToclean) {
   while (divToclean.firstChild) {
     divToclean.removeChild(divToclean.firstChild);
   }
 }
-
-function deleteFav() {
-  console.log('Is working');
-  localStorage.removeItem('favSeries');
-  seriesFav = [];
-  const favContainer = document.querySelector('.fav__container');
-  cleanResultDiv(favContainer);
-
-  const eachSerie__containers = document.querySelectorAll('.eachSerie__container');
-  for (const container of eachSerie__containers) {
-    container.classList.remove('alreadyFav');
-  }
-}
-
-searchButton.addEventListener('click', getData);
-deleteButton.addEventListener('click', deleteFav);
-
-getLocalStorage();

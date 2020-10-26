@@ -4,8 +4,8 @@
   padding: 0; }
 
 body {
-  font-family: '', sans-serif;
-  background-color: rosybrown; }
+  font-family: 'Rubik', sans-serif;
+  background-color: #8d8d8d; }
 
 .search__container {
   display: flex;
@@ -18,32 +18,37 @@ body {
   text-transform: uppercase;
   flex-direction: row;
   justify-content: center;
-  font-size: 50px;
+  font-size: 55px;
   color: #644143;
-  margin: 80px 0 20px 0; }
+  margin: 80px 10px 20px 0px; }
 
 .inputText {
   border-radius: 20px;
   border: none;
   margin: 10px 0 10px 0px;
   padding: 2px 5px 2px 14px;
-  background-color: beige;
+  background-color: #d7d0b7;
   width: 220px;
   height: 30px;
-  color: #644143; }
+  color: #644143;
+  font-family: 'Rubik', sans-serif; }
 
 .search__btn,
 .deleteButton {
   border-radius: 14px;
+  font-family: 'Rubik', sans-serif;
   border: none;
   margin: 10px 0 10px 45px;
   padding: 2px 7px 2px 7px;
-  background-color: beige;
+  background-color: #d7d0b7;
   color: #644143; }
   .search__btn:hover,
   .deleteButton:hover {
     background-color: #644143;
-    color: beige; }
+    color: #d7d0b7; }
+
+*:focus {
+  outline: none; }
 
 .fav__container {
   display: flex;
@@ -51,8 +56,16 @@ body {
   flex-direction: row;
   background-color: #644143;
   color: beige;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 0px 20px 10px;
   margin: 0 20px 20px 20px; }
+
+.results__container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: center;
+  color: #644143;
+  padding: 20px 50px 20px 0px; }
 
 .resultsParagr,
 .favParagr {
@@ -61,19 +74,25 @@ body {
   font-size: 20px; }
 
 .resultTitle {
-  width: 200px;
-  color: #644143; }
+  width: 140px; }
+
+.resultFavTitle {
+  width: 100px;
+  text-align: center; }
+
+.eachSerieFav__container {
+  width: 180px; }
 
 .eachSerie__container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 10px 20px 20px 20px; }
+  margin: 10px 20px 20px 20px;
+  text-align: center; }
 
 .resultImg {
-  width: 120px; }
+  width: 130px;
+  height: 180px; }
 
 .alreadyFav {
-  background-color: beige; }
+  background-color: beige;
+  padding-top: 10px; }
 
 /*# sourceMappingURL=main.css.map */
