@@ -1,10 +1,12 @@
-<strong> Evaluación final </strong> <br>
+<strong> Final evaluation 2 </strong> <br>
 
-Evaluación final del módulo 2 en Adalab. <br>
-Consiste en una aplicación de búsqueda de series, que a través de la API de TV Maze nos permite buscar las series por su título y guardarlas en una lista de favoritos.
+Final evaluation of module 2 in Adalab. <br>
+It is a series search application that, through the TV Maze API, allows us to search for series by title and save them in a list of favorites.
 
 <ul>
-<li>Cómo instalar: npm install</li>
-<li>Cómo arrancar el proyecto: npm start</li>
-<li>Cómo publicar el proyecto: npm run docs</li>
+<li>How to install: npm install</li>
+<li>How to start the project: npm start</li>
+<li>How to publish the project: npm run docs</li>
 </ul>
+
+
